@@ -11,7 +11,7 @@ function read(data: number) {
       userId: data,
     },
     include: {
-      game: {},
+      game: { include: { publisher: { select: { name: true } } } },
       user: { select: { name: true } },
       review: { select: { review: true } },
       ratings: { select: { rating: true } },

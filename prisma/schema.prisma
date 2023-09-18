@@ -1,0 +1,74 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model users {
+  id        Int         @id @default(autoincrement())
+  name      String      @db.VarChar(50)
+  userGames userGames[]
+  ratings   ratings[]
+  reviews   reviews[]
+}
+
+model userGames {
+  id      Int       @id @default(autoincrement())
+  userId  Int
+  user    users     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  gameId  Int
+  game    games     @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  ratings ratings[]
+  review  reviews[]
+
+  @@unique([userId, gameId], name: "userGames_userId_gameId")
+}
+
+model games {
+  id          Int         @id @default(autoincrement())
+  name        String      @unique @db.VarChar(50)
+  launchDate  DateTime    @db.Date
+  publisherId Int
+  publisher   publishers  @relation(fields: [publisherId], references: [id], onDelete: Cascade)
+  userGames   userGames[]
+  ratings     ratings[]
+  reviews     reviews[]
+}
+
+model publishers {
+  id    Int     @id @default(autoincrement())
+  name  String  @unique @db.VarChar(50)
+  games games[]
+}
+
+model reviews {
+  id          Int        @id @default(autoincrement())
+  review      String     @db.VarChar(255)
+  userId      Int
+  user        users      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  gameId      Int
+  game        games      @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  userGamesId Int
+  userGames   userGames? @relation(fields: [userGamesId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, gameId, userGamesId], name: "reviews_userId_gameId_userGamesId")
+}
+
+model ratings {
+  id          Int        @id @default(autoincrement())
+  rating      Int        @default(0)
+  userId      Int
+  user        users      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  gameId      Int
+  game        games      @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  userGamesId Int
+  userGames   userGames? @relation(fields: [userGamesId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, gameId, userGamesId], name: "ratings_userId_gameId_userGamesId")
+}

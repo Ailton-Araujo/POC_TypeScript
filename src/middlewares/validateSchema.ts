@@ -4,7 +4,6 @@ import { unprocessableError } from "@/errors";
 
 export function validateBody(schema: ObjectSchema) {
   return (req: Request, res: Response, next: NextFunction) => {
-    console.log(req.body);
     const { error } = schema.validate(req.body, {
       abortEarly: false,
     });

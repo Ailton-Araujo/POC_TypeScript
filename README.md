@@ -3,6 +3,14 @@
 ## About:
 
 This is a POC of TypeScript and Prisma Orm that offers a API for a Game Library Service.
+## Technologies:
+
+- Node (versão 18.17.0);
+- Express;
+- TypeScript;
+- Prisma;
+- Postgres;
+- Joi;
 
 ## Installation:
 
